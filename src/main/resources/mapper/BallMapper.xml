@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suke.RentalSystem.dao.BallMapper">
+  <resultMap id="BaseResultMap" type="com.suke.RentalSystem.model.Ball">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="brand" jdbcType="VARCHAR" property="brand" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="day_price1" jdbcType="DECIMAL" property="dayPrice1" />
+    <result column="day_price2" jdbcType="DECIMAL" property="dayPrice2" />
+    <result column="month_price" jdbcType="DECIMAL" property="monthPrice" />
+    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
+    <result column="created_date" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="last_modified_by" jdbcType="BIGINT" property="lastModifiedBy" />
+    <result column="last_modified_date" jdbcType="TIMESTAMP" property="lastModifiedDate" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+  </resultMap>
+
+    <select id="search" resultMap="BaseResultMap">
+      SELECT * FROM tbl_ball
+      <where>
+        stock != 0
+        <if test="param != null">
+          <if test="param.type != null and param.type != 'null'">
+            AND type = #{param.type}
+          </if>
+          <if test="param.brand != null and param.brand != 'null'">
+            AND brand = #{param.brand}
+          </if>
+          <if test="param.minDayPrice != null and  param.maxDayPrice != null ">
+            AND day_price between #{param.minDayPrice} and #{param.maxDayPrice}
+          </if>
+          <if test="param.minMonthPrice != null and  param.maxMonthPrice != null ">
+            AND day_price between #{param.minMonthPrice} and #{param.maxMonthPrice}
+          </if>
+        </if>
+      </where>
+    </select>
+
+  <select id="findByIdList" resultMap="BaseResultMap" parameterType="list">
+    SELECT * FROM tbl_ball WHERE id in (
+    <foreach collection="idList" item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
+  </select>
+</mapper>
